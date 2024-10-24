@@ -386,3 +386,222 @@ graph TD
    - Always use specific image tags instead of `latest`
    - Regularly update images for security patches
    - Remove unnecessary containers and images
+
+
+# Building Docker Images Guide
+
+## Using Dockerfile
+
+### Basic Workflow
+
+```mermaid
+flowchart LR
+    A[Create Dockerfile] -->|docker build| B[Build Image]
+    B -->|docker tag| C[Tag Image]
+    C -->|docker push| D[Push to Registry]
+    
+    style A fill:#E5F6FF,stroke:#333,color:#333
+    style B fill:#E5FFE5,stroke:#333,color:#333
+    style C fill:#FFE5E5,stroke:#333,color:#333
+    style D fill:#FFFBE5,stroke:#333,color:#333
+```
+
+### Steps to Build Image
+1. Create a Dockerfile in your project directory
+2. Run build command:
+   ```bash
+   docker build -t <tagName> .
+   ```
+3. This creates a Docker image with the specified tag
+
+## Dockerfile Syntax
+
+### Basic Instructions
+
+```mermaid
+graph TD
+    A[FROM] -->|Base Image| B[COPY/ADD]
+    B -->|Files| C[WORKDIR]
+    C -->|Directory| D[RUN]
+    D -->|Commands| E[EXPOSE]
+    E -->|Ports| F[CMD/ENTRYPOINT]
+    
+    style A fill:#E5F6FF,stroke:#333,color:#333
+    style B fill:#E5FFE5,stroke:#333,color:#333
+    style C fill:#FFE5E5,stroke:#333,color:#333
+    style D fill:#FFFBE5,stroke:#333,color:#333
+    style E fill:#F0F0F0,stroke:#333,color:#333
+    style F fill:#E5F6FF,stroke:#333,color:#333
+```
+
+### Key Dockerfile Instructions
+
+1. **FROM**
+   - Specifies the base image
+   - Example: `FROM ubuntu:20.04`
+
+2. **COPY**
+   - Copies files from host to image
+   - Example: `COPY . /app`
+
+3. **WORKDIR**
+   - Sets working directory for following instructions
+   - Example: `WORKDIR /app`
+
+4. **EXPOSE**
+   - Exposes a container port
+   - Example: `EXPOSE 8080`
+
+5. **CMD**
+   - Defines default command to run when container starts
+   - Example: `CMD ["java", "-jar", "app.jar"]`
+
+6. **ENTRYPOINT**
+   - Defines command that should always run
+   - Example: `ENTRYPOINT ["java"]`
+
+### Sample Dockerfile Structure
+
+```dockerfile
+# Base image
+FROM openjdk:11-jdk
+
+# Set working directory
+WORKDIR /app
+
+# Copy application files
+COPY target/*.jar app.jar
+
+# Expose application port
+EXPOSE 8080
+
+# Command to run the application
+CMD ["java", "-jar", "app.jar"]
+```
+
+## Using Maven Plugin for Spring Boot Applications
+
+```mermaid
+flowchart LR
+    A[pom.xml] -->|Maven Plugin| B[Build JAR]
+    B -->|Build Image| C[Docker Image]
+    
+    style A fill:#E5F6FF,stroke:#333,color:#333
+    style B fill:#E5FFE5,stroke:#333,color:#333
+    style C fill:#FFE5E5,stroke:#333,color:#333
+```
+
+### Steps:
+1. Add plugin to `pom.xml`:
+   ```xml
+   <build>
+       <plugins>
+           <plugin>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-maven-plugin</artifactId>
+           </plugin>
+       </plugins>
+   </build>
+   ```
+
+2. Build image:
+   ```bash
+   ./mvnw clean install spring-boot:build-image
+   ```
+
+3. Configure image name in `pom.xml`:
+   ```xml
+   <configuration>
+       <image>
+           <name>myorg/${project.artifactId}</name>
+       </image>
+   </configuration>
+   ```
+
+## Pushing Images to DockerHub
+
+```mermaid
+flowchart LR
+    A[Create Account] -->|docker login| B[Login]
+    B -->|docker tag| C[Tag Image]
+    C -->|docker push| D[Push Image]
+    
+    style A fill:#E5F6FF,stroke:#333,color:#333
+    style B fill:#E5FFE5,stroke:#333,color:#333
+    style C fill:#FFE5E5,stroke:#333,color:#333
+    style D fill:#FFFBE5,stroke:#333,color:#333
+```
+
+### Steps:
+
+1. **Create DockerHub Account**
+   - Visit [hub.docker.com](https://hub.docker.com)
+   - Sign up for an account
+
+2. **Login to DockerHub**
+   ```bash
+   docker login
+   # Enter username and password when prompted
+   ```
+
+3. **Tag Image**
+   ```bash
+   docker tag <image-name>:<version> <username>/<image-name>
+   ```
+
+4. **Push Image**
+   ```bash
+   docker push <username>/<image-name>:<version>
+   ```
+
+### Best Practices
+
+1. **Image Naming**
+   - Use meaningful tags
+   - Include version numbers
+   - Follow naming conventions
+
+2. **Security**
+   - Use secure credentials
+   - Regular password rotation
+   - Enable 2FA on DockerHub
+
+3. **Version Control**
+   - Tag images appropriately
+   - Don't use `latest` tag for production
+   - Keep track of image versions
+
+4. **Documentation**
+   - Document Dockerfile changes
+   - Include README with usage instructions
+   - Document exposed ports and volumes
+
+```mermaid
+graph TD
+    subgraph "Docker Image Building and Deployment Process"
+        A[Initial Steps] -->|Setup| B[Build Steps]
+        B -->|Configure| C[Configuration]
+        C -->|Deploy| D[Deployment]
+        D -->|Maintain| E[Additional Steps]
+        
+        subgraph "Step Types"
+            F[Initial Steps<br/>Setup & Planning]
+            G[Build Steps<br/>Image Creation]
+            H[Configuration<br/>Settings & Tags]
+            I[Deployment<br/>Push & Release]
+            J[Additional Steps<br/>Maintenance]
+        end
+        
+        style A fill:#E5F6FF,stroke:#333,color:#333
+        style B fill:#E5FFE5,stroke:#333,color:#333
+        style C fill:#FFE5E5,stroke:#333,color:#333
+        style D fill:#FFFBE5,stroke:#333,color:#333
+        style E fill:#F0F0F0,stroke:#333,color:#333
+        
+        style F fill:#E5F6FF,stroke:#333,color:#333
+        style G fill:#E5FFE5,stroke:#333,color:#333
+        style H fill:#FFE5E5,stroke:#333,color:#333
+        style I fill:#FFFBE5,stroke:#333,color:#333
+        style J fill:#F0F0F0,stroke:#333,color:#333
+    end
+```
