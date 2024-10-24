@@ -202,3 +202,187 @@ Docker addresses the original challenges by:
 5. **Portability**: Run anywhere Docker is installed without modification
 
 This comprehensive platform has revolutionized how we develop, deploy, and run applications in modern software development environments.
+
+# Docker Commands Guide
+
+## Installation
+
+### Getting Started with Docker
+
+1. Download Docker Desktop based on your OS:
+   - Windows
+   - macOS
+   - Linux
+
+2. Verify installation:
+```bash
+$ docker --version
+```
+
+## Essential Docker Commands
+
+```mermaid
+graph TB
+    subgraph "Docker Command Flow"
+        A[Pull Image] -->|docker pull| B[Create Container]
+        B -->|docker run| C[Running Container]
+        C -->|docker stop| D[Stopped Container]
+        D -->|docker start| C
+        D -->|docker rm| E[Remove Container]
+        
+        style A fill:#f9f,stroke:#333
+        style B fill:#bbf,stroke:#333
+        style C fill:#bfb,stroke:#333
+        style D fill:#fbb,stroke:#333
+        style E fill:#ddd,stroke:#333
+    end
+```
+
+### Basic Commands Overview
+
+1. **Running Containers**
+   ```bash
+   # Run a container in detached mode with port mapping
+   docker run -d -p 8080:80 nginx
+   ```
+   - `-d`: Run in detached mode (background)
+   - `-p 8080:80`: Map port 8080 on host to port 80 in container
+   - `nginx`: Image name
+
+2. **Container Management**
+   ```bash
+   # List all containers (running and stopped)
+   docker ps -a
+   
+   # Stop a running container
+   docker stop <container_id>
+   
+   # Start a stopped container
+   docker start <container_id>
+   
+   # Remove a container
+   docker rm <container_id>
+   ```
+
+3. **Image Management**
+   ```bash
+   # List all images
+   docker images
+   
+   # Remove an image
+   docker rmi <image_name>
+   
+   # Pull an image from registry
+   docker pull <image-name>:<tag>
+   ```
+
+4. **Maintenance Commands**
+   ```bash
+   # Remove all stopped containers
+   docker container prune
+   
+   # View container logs
+   docker logs <container-id>
+   
+   # Inspect container details
+   docker inspect <container-id>
+   
+   # View container resource usage
+   docker stats
+   ```
+
+### Command Flow Visualization
+
+```mermaid
+flowchart LR
+    A[Image] -->|docker pull| B[Local Image]
+    B -->|docker run| C[Container]
+    C -->|docker stop| D[Stopped]
+    D -->|docker start| C
+    D -->|docker rm| E[Removed]
+    B -->|docker rmi| F[Deleted]
+    
+    style A fill:#f9f,stroke:#333
+    style B fill:#bbf,stroke:#333
+    style C fill:#bfb,stroke:#333
+    style D fill:#fbb,stroke:#333
+    style E fill:#ddd,stroke:#333
+    style F fill:#ddd,stroke:#333
+```
+
+## Common Command Patterns
+
+### Container Lifecycle
+1. **Creating and Running**
+   ```bash
+   # Pull image (optional, done automatically by run)
+   docker pull nginx
+   
+   # Create and start container
+   docker run -d nginx
+   ```
+
+2. **Monitoring**
+   ```bash
+   # View running containers
+   docker ps
+   
+   # View logs
+   docker logs <container-id>
+   
+   # View resource usage
+   docker stats
+   ```
+
+3. **Stopping and Cleaning**
+   ```bash
+   # Stop container
+   docker stop <container-id>
+   
+   # Remove container
+   docker rm <container-id>
+   
+   # Remove image
+   docker rmi nginx
+   ```
+
+### Important Notes:
+- `docker run` creates a new container each time
+- `docker start` restarts an existing container
+- Use `docker ps -a` to see all containers, including stopped ones
+- Always clean up unused containers with `docker container prune` to free up resources
+- Use `docker inspect` to troubleshoot container issues
+- Tags are important when pulling images (e.g., `nginx:latest`)
+
+## Best Practices
+
+```mermaid
+graph TD
+    A[Install Docker] -->|Verify| B[Check Version]
+    B -->|Initial Setup| C[Pull Images]
+    C -->|Create| D[Run Containers]
+    D -->|Monitor| E[Check Logs/Stats]
+    E -->|Maintain| F[Cleanup Resources]
+    
+    style A fill:#f9f,stroke:#333
+    style B fill:#bbf,stroke:#333
+    style C fill:#bfb,stroke:#333
+    style D fill:#fbb,stroke:#333
+    style E fill:#ddd,stroke:#333
+    style F fill:#fdb,stroke:#333
+```
+
+1. **Resource Management**
+   - Regularly run `docker container prune` to remove unused containers
+   - Monitor container resources with `docker stats`
+   - Remove unused images to free up disk space
+
+2. **Debugging**
+   - Use `docker logs` for troubleshooting
+   - `docker inspect` provides detailed container information
+   - Monitor container health with `docker stats`
+
+3. **Security**
+   - Always use specific image tags instead of `latest`
+   - Regularly update images for security patches
+   - Remove unnecessary containers and images
