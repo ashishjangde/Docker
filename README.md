@@ -14,41 +14,42 @@ Traditional challenges when using Virtual Machines:
 
 ```mermaid
 graph TB
-    subgraph "Virtual Machine Architecture"
-        H1[Hardware]
-        OS1[Host OS]
-        H1 --> OS1
-        VMH[Hypervisor]
-        OS1 --> VMH
-        VM1[VM 1]
-        VM2[VM 2]
-        VMH --> VM1
-        VMH --> VM2
-        GOS1[Guest OS 1]
-        GOS2[Guest OS 2]
-        VM1 --> GOS1
-        VM2 --> GOS2
-        A1[App 1]
-        A2[App 2]
-        GOS1 --> A1
-        GOS2 --> A2
-    end
+%% Styling Nodes and Subgraphs
+   style H1 fill:#0D3B66,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style OS1 fill:#3CAEA3,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style VMH fill:#F7B801,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style VM1,VM2,GOS1,GOS2 fill:#ED553B,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style A1,A2 fill:#FC4A1A,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style H2,OS2,D fill:#4ABDAC,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style C1,C2,APP1,APP2 fill:#FF9F1C,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style Virtual_Machine_Architecture fill:#14213D,stroke:#FFFFFF,stroke-width:2px,color:white,fontsize:18px
+   style Container_Architecture fill:#14213D,stroke:#FFFFFF,stroke-width:2px,color:white,fontsize:18px
 
-    subgraph "Container Architecture"
-        H2[Hardware]
-        OS2[Host OS]
-        H2 --> OS2
-        D[Docker Engine]
-        OS2 --> D
-        C1[Container 1]
-        C2[Container 2]
-        D --> C1
-        D --> C2
-        APP1[App 1]
-        APP2[App 2]
-        C1 --> APP1
-        C2 --> APP2
-    end
+%% Virtual Machine Architecture
+   subgraph Virtual_Machine_Architecture["Virtual Machine Architecture"]
+      H1[Hardware]
+      OS1[Host OS]
+      H1 --> OS1
+      VMH[Hypervisor]
+      OS1 --> VMH
+      VM1[VM 1] --> GOS1[Guest OS 1] --> A1[App 1]
+      VM2[VM 2] --> GOS2[Guest OS 2] --> A2[App 2]
+   end
+
+%% Spacer Node to Separate Architectures
+   style Spacer fill:none,stroke:none
+   Spacer(( ))
+
+%% Container Architecture
+subgraph Container_Architecture["Container Architecture"]
+H2[Hardware]
+OS2[Host OS]
+H2 --> OS2
+D[Docker Engine]
+OS2 --> D
+D --> C1[Container 1] --> APP1[App 1]
+D --> C2[Container 2] --> APP2[App 2]
+end
 ```
 
 ## Enters Containers
@@ -74,21 +75,33 @@ Docker is the platform that enables the creation, management, and execution of c
 
 ```mermaid
 graph TB
-    subgraph "Docker Architecture"
-        CLI[Docker CLI]
-        REST[REST API]
-        DAEMON[Docker Daemon]
-        REG[Registry]
-        IMG[Images]
-        CON[Containers]
-        
-        CLI -->|Commands| REST
-        REST -->|API Requests| DAEMON
-        DAEMON -->|Pulls| REG
-        DAEMON -->|Manages| IMG
-        DAEMON -->|Runs| CON
-        IMG -->|Creates| CON
-    end
+%% Styling the subgraph and nodes
+   style CLI fill:#4ABDAC,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style REST fill:#FC4A1A,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style DAEMON fill:#F7B801,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style REG fill:#0D3B66,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style IMG fill:#3CAEA3,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style CON fill:#ED553B,stroke:#023047,stroke-width:2px,color:white,fontsize:16px
+   style Docker_Architecture fill:#14213D,stroke:#FFFFFF,stroke-width:2px,color:white,fontsize:18px
+
+%% Defining the subgraph for clarity
+   subgraph Docker_Architecture["Docker Architecture"]
+      CLI[Docker CLI]
+      REST[REST API]
+      DAEMON[Docker Daemon]
+      REG[Registry]
+      IMG[Images]
+      CON[Containers]
+
+   %% Flow connections with labels for better understanding
+      CLI -->|Executes Commands| REST
+      REST -->|Sends API Requests| DAEMON
+      DAEMON -->|Pulls Images From| REG
+      DAEMON -->|Manages| IMG
+      DAEMON -->|Runs and Controls| CON
+      IMG -->|Builds| CON
+   end
+
 ```
 
 The Docker architecture consists of several key components:
@@ -115,9 +128,9 @@ A Dockerfile serves as the recipe for building a Docker image. It contains instr
 graph LR
     DF[Dockerfile] -->|docker build| IMG[Docker Image]
     IMG -->|docker run| CON[Container]
-    style DF fill:#f9f,stroke:#333
-    style IMG fill:#bbf,stroke:#333
-    style CON fill:#bfb,stroke:#333
+    style DF fill:#fffff,stroke:#333
+    style IMG fill:#fffff,stroke:#333
+    style CON fill:#fffff,stroke:#333
 ```
 
 ### Docker Image
@@ -145,10 +158,10 @@ graph LR
     TEST -->|Same Image| STAGE[Staging]
     STAGE -->|Same Image| PROD[Production]
     
-    style DEV fill:#f9f,stroke:#333
-    style TEST fill:#bbf,stroke:#333
-    style STAGE fill:#bfb,stroke:#333
-    style PROD fill:#fbb,stroke:#333
+    style DEV fill:#fffff,stroke:#333
+    style TEST fill:#fffff,stroke:#333
+    style STAGE fill:#fffff,stroke:#333
+    style PROD fill:#fffff,stroke:#333
 ```
 
 ## Benefits of Docker
