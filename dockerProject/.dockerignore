@@ -1,0 +1,13 @@
+# Exclude node_modules directory
+node_modules
+
+# Exclude log files
+*.log
+
+# Exclude specific file
+.env
+
+
+# Exclude build output
+dist
+build
