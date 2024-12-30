@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  product-db:
+    image: postgres:latest
+    container_name: product-db
+    environment:
+      POSTGRES_DB: "dev"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "manager"
+    volumes:
+      - product-db-data:/var/lib/postgresql/data
+    networks:
+      - my-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  product-service:
+    image: ashishjangde/product-service
+    container_name: product-service
+    ports:
+      - "8080:8080"
+    networks:
+      - my-network
+    depends_on:
+      product-db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://product-db:5432/dev
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: manager
+
+
+volumes:
+  product-db-data:
+
+networks:
+  my-network:

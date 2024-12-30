@@ -243,11 +243,12 @@ graph TB
 1. **Running Containers**
    ```bash
    # Run a container in detached mode with port mapping
-   docker run -d -p 8080:80 nginx
+   docker run -d -p 8080:80 --name "ashish" nginx
    ```
    - `-d`: Run in detached mode (background)
    - `-p 8080:80`: Map port 8080 on host to port 80 in container
    - `nginx`: Image name
+   - `--name` : For setting name
 
 2. **Container Management**
    ```bash
